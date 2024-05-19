@@ -116,7 +116,7 @@ class AttributeProductController extends Controller
             return response()->json(["message" => 403]);
         }
         $attribute = Attribute::findOrFail($id);
-        $attribute->update(request->all()); 
+        $attribute->update(request->all());
         return response()->json([
             "message" => 200,
             "attribute" => [
