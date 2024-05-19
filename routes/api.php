@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Product\CategoryController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Product\AttributeProductController;
 
 Route::group([
   'prefix' => 'auth'
@@ -23,8 +24,10 @@ Route::group([
 Route::group([
   "middleware" => "auth:api",
   "prefix" => "admin",
-], function($router) {
+], function ($router) {
   Route::get("categories/config", [CategoryController::class, "config"]);
   Route::resource("categories", CategoryController::class);
   Route::post("categories/edit/{id}", [CategoryController::class, "update"]);
+
+  Route::resource("attributes", AttributeProductController::class);
 });
