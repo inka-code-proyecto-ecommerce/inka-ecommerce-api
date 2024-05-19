@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product\Attribute;
+use App\Models\Product\Propertie;
 use Illuminate\Http\Request;
 
 class AttributeProductController extends Controller
@@ -19,7 +20,22 @@ class AttributeProductController extends Controller
 
         return response()->json([
             "total" => $attributes->total(),
-            "attributes" => $attributes,
+            "attributes" => $attributes->map(function ($attribute){
+                return [
+                    "id" => $attribute->id,
+                    "name" => $attribute->name,
+                    "type_attribute" => $attribute->type_attribute,
+                    "state" => $attribute->state,
+                    "created_at" => $attribute->created_at->format("Y-m-d h:i:s"),
+                    "properties" => $attribute->properties->map(function ($propertie) {
+                        return [
+                            "id" => $propertie->id,
+                            "name" => $propertie->name,
+                            "code" => $propertie->code,
+                        ];
+                    })
+                ];
+            }),
         ]);
     }
 
@@ -36,9 +52,51 @@ class AttributeProductController extends Controller
 
         return response()->json([
             "message" => 200,
-            "attribute" => $attribute,
+            "attribute" => [
+                "id" => $attribute->id,
+                "name" => $attribute->name,
+                "type_attribute" => $attribute->type_attribute,
+                "state" => $attribute->state,
+                "created_at" => $attribute->created_at->format("Y-m-d h:i:s"),
+                "properties" => $attribute->properties->map(function ($propertie) {
+                    return [
+                        "id" => $propertie->id,
+                        "name" => $propertie->name,
+                        "code" => $propertie->code,
+                    ];
+                })
+            ],
         ]);
     }
+
+    public function store_propertie(Request $request) {
+        $isValida = Propertie::where("name",$request->name)->first();
+        if ($isValida){
+            return response()->json(["message" => 403]);
+        }
+        $propertie = Propertie::create($request->all());
+
+        return response()->json([
+            "message" => 200,
+            "propertie" => [
+                "id" => $propertie->id,
+                "name" => $propertie->name,
+                "code" => $propertie->code,
+                "state" => $propertie->state,
+                "created_at" => $propertie->created_at->format("Y-m-d h:i:s"),
+            ],
+        ]);
+    }
+
+    public function destroy_propertie($id) {
+        $propertie = Propertie::findOrFail($id);
+        $propertie->delete();
+
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
+
 
     /**
      * Display the specified resource.
@@ -61,7 +119,20 @@ class AttributeProductController extends Controller
         $attribute->update(request->all()); 
         return response()->json([
             "message" => 200,
-            "attribute" => $attribute,
+            "attribute" => [
+                "id" => $attribute->id,
+                "name" => $attribute->name,
+                "type_attribute" => $attribute->type_attribute,
+                "state" => $attribute->state,
+                "created_at" => $attribute->created_at->format("Y-m-d h:i:s"),
+                "properties" => $attribute->properties->map(function ($propertie) {
+                    return [
+                        "id" => $propertie->id,
+                        "name" => $propertie->name,
+                        "code" => $propertie->code,
+                    ];
+                })
+            ],
         ]);
     }
 
