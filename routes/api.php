@@ -27,7 +27,8 @@ Route::group([
 ], function ($router) {
   Route::get("categories/config", [CategoryController::class, "config"]);
   Route::resource("categories", CategoryController::class);
-  Route::post("categories/edit/{id}", [CategoryController::class, "update"]);
+  Route::post("categories/{id}", [CategoryController::class, "update"]);
+  
   Route::post("properties", [CategoryController::class, "store_propertie"]);
   Route::delete("properties/{id}", [CategoryController::class, "destroy_propertie"]);
   Route::resource("attributes", AttributeProductController::class);
