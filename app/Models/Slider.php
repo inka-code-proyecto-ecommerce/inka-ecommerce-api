@@ -17,7 +17,8 @@ class Slider extends Model
         "label",
         "imagen",
         "link",
-        "state"
+        "state",
+        "color"
     ];
 
     public function setCreatedAtAttribute($value)
