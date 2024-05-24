@@ -16,7 +16,7 @@ class AttributeProductController extends Controller
     {
         $search = $request->search;
 
-        $attributes = Attribute::where("name","like", "%".search."%")->orderBy("id", "desc")->paginate(25);
+        $attributes = Attribute::where("name","like", "%".$search."%")->orderBy("id", "desc")->paginate(25);
 
         return response()->json([
             "total" => $attributes->total(),
@@ -118,7 +118,7 @@ class AttributeProductController extends Controller
             return response()->json(["message" => 403]);
         }
         $attribute = Attribute::findOrFail($id);
-        $attribute->update(request->all());
+        $attribute->update($request->all());
         return response()->json([
             "message" => 200,
             "attribute" => [
