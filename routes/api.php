@@ -41,5 +41,5 @@ Route::group([
 
     Route::get("products/config", [ProductController::class, "config"]);
     Route::resource("products", ProductController::class);
-    Route::post("products/{id}", [ProductController::class, "update"]);
+    Route::post("products/edit/{id}", [ProductController::class, "update"]);
 });
