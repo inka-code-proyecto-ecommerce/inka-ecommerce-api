@@ -8,7 +8,10 @@ use App\Models\Product\Product;
 use App\Models\Product\Brand;
 use App\Models\Product\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Product\ProductCollection;
+use App\Http\Resources\Product\ProductResource;
 use Illuminate\Support\Facades\Storage;
+
 
 class ProductController extends Controller
 {
@@ -27,7 +30,7 @@ class ProductController extends Controller
             ->orderBy("id")->paginate(25);
         return response()->json([
             "total" => $products->total,
-            "products" => $products,
+            "products" => ProductCollection::make($products),
         ]);
     }
 
@@ -78,7 +81,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         return response()->json([
-            "product" => $product
+            "product" => ProductResource::make($product)
         ]);
     }
 
