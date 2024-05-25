@@ -23,8 +23,8 @@ class CategoryController extends Controller
 
     public function config()
     {
-        $categories_first = Category::where("second_id", NULL)->where("third_id", NULL)->get();
-        $categories_second = Category::where("second_id", "<>", NULL)->where("third_id", NULL)->get();
+        $categories_first = Category::where("second_id", null)->where("third_id", null)->get();
+        $categories_second = Category::where("second_id", "<>", null)->where("third_id", null)->get();
         return response()->json(["categories_first" => $categories_first, "categories_second" => $categories_second]);
     }
 
@@ -38,7 +38,7 @@ class CategoryController extends Controller
             $path = Storage::putFile("categories", $request->file("image"));
             $request->request->add(["imagen" => $path]);
         }
-        $category= Category::create($request->all());
+        $category = Category::create($request->all());
         return response()->json(["message" => 201]);
     }
 

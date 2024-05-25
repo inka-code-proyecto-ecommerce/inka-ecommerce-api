@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Product\CategoryController;
+use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -37,4 +38,8 @@ Route::group([
 
     Route::resource("sliders", SliderController::class);
     Route::post("sliders/{id}", [SliderController::class, "update"]);
+
+    Route::get("products/config", [ProductController::class, "config"]);
+    Route::resource("products", ProductController::class);
+    Route::post("products/{id}", [ProductController::class, "update"]);
 });
