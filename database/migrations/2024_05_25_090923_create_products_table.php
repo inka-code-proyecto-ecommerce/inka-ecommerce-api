@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('imagen');
             $table->tinyInteger('state')->default(1)->unsigned();
             $table->longText('tags')->nullable();
-            $table->unsignedBigInteger('brand_id')->unsigned();
-            $table->unsignedBigInteger('category_first_id')->unsigned();
+            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->unsignedBigInteger('category_first_id')->nullable();
             $table->unsignedBigInteger('category_second_id')->nullable();
             $table->unsignedBigInteger('category_third_id')->nullable();
             $table->double('stock');
