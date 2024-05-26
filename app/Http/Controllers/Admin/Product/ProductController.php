@@ -144,4 +144,15 @@ class ProductController extends Controller
             "message" => 200,
         ]);
     }
+    public function delete_imagen(string $id)
+    {
+        $product = ProductImage::findOrFail($id);
+        if ($product->imagen) {
+            Storage::delete($product->imagen);
+        }
+        $product->delete();
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
 }
