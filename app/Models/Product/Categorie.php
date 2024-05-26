@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class Categorie extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -35,11 +35,11 @@ class Category extends Model
 
     public function category_second()
     {
-        return $this->belongsTo(Category::class, "second_id");
+        return $this->belongsTo(Categorie::class, "second_id");
     }
 
     public function category_third()
     {
-        return $this->belongsTo(Category::class, "third_id");
+        return $this->belongsTo(Categorie::class, "third_id");
     }
 }

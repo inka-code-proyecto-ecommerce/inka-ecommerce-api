@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Product\Product;
 use App\Models\Product\Brand;
-use App\Models\Product\Category;
+use App\Models\Product\Categorie;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
@@ -29,16 +29,16 @@ class ProductController extends Controller
         $products = Product::filterAdvanceProduct($search, $category_first_id, $category_second_id, $category_third_id)
             ->orderBy("id")->paginate(25);
         return response()->json([
-            "total" => $products->total,
+            "total" => $products->total(),
             "products" => ProductCollection::make($products),
         ]);
     }
 
     public function config()
     {
-        $categories_first = Category::where("state",1)->where("category_second_id", null)->where("category_third_id", null)->get();
-        $categories_second = Category::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
-        $categories_third = Category::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
+        $categories_first = Categorie::where("state",1)->where("category_second_id", null)->where("category_third_id", null)->get();
+        $categories_second = Categorie::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
+        $categories_third = Categorie::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
 
         $brands = Brand::where("state",1)->get();
         return response()->json([

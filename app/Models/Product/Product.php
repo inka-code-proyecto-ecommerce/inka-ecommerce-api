@@ -41,19 +41,19 @@ class Product extends Model
 
     public function category_first()
     {
-        return $this->belongsTo(Category::class, "category_first_id");
+        return $this->belongsTo(Categorie::class, "category_first_id");
     }
     public function category_second()
     {
-        return $this->belongsTo(Category::class, "category_second_id");
+        return $this->belongsTo(Categorie::class, "category_second_id");
     }
     public function category_third()
     {
-        return $this->belongsTo(Category::class, "category_third_id");
+        return $this->belongsTo(Categorie::class, "category_third_id");
     }
     public function brand()
     {
-        return $this->belongsTo(Category::class, "brand_id");
+        return $this->belongsTo(Brand::class, "brand_id");
     }
 
     public function images()
