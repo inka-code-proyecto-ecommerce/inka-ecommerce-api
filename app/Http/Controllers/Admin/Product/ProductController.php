@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Product\Product;
+use App\Models\Product\ProductImage;
 use App\Models\Product\Brand;
 use App\Models\Product\Categorie;
 use App\Http\Controllers\Controller;
@@ -36,11 +37,11 @@ class ProductController extends Controller
 
     public function config()
     {
-        $categories_first = Categorie::where("state",1)->where("category_second_id", null)->where("category_third_id", null)->get();
-        $categories_second = Categorie::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
-        $categories_third = Categorie::where("state",1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
+        $categories_first = Categorie::where("state", 1)->where("category_second_id", null)->where("category_third_id", null)->get();
+        $categories_second = Categorie::where("state", 1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
+        $categories_third = Categorie::where("state", 1)->where("category_second_id", "<>", null)->where("category_third_id", null)->get();
 
-        $brands = Brand::where("state",1)->get();
+        $brands = Brand::where("state", 1)->get();
         return response()->json([
             "category_first" => $categories_first,
             "category_second" => $categories_second,
@@ -73,7 +74,24 @@ class ProductController extends Controller
             "message" => 200,
         ]);
     }
+    public function imagens(Request $request)
+    {
+        $product_id = $request->product_id;
 
+        if ($request->hasFile("imagen_add")) {
+            $path = Storage::putFile("produts", $request->file("imagen_add"));
+        }
+        $product_imagen = ProductImage::create([
+            "imagen" => $path,
+            "product_id" => $product_id,
+        ]);
+        return response()->json([
+            "imagen" => [
+                "id" => $product_imagen->id,
+                "imagen" => env("APP_URL") . "storage/" . $product_imagen->imagen,
+            ],
+        ]);
+    }
     /**
      * Display the specified resource.
      */
