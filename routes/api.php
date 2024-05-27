@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Product\AttributeProductController;
-
+use App\Http\Controllers\Admin\Product\BrandController;
 
 Route::group([
     'prefix' => 'auth'
@@ -32,8 +32,8 @@ Route::group([
     Route::resource("categories", CategorieController::class);
     Route::post("categories/edit/{id}", [CategorieController::class, "update"]);
 
-    Route::post("properties", [CategorieController::class, "store_propertie"]);
-    Route::delete("properties/{id}", [CategorieController::class, "destroy_propertie"]);
+    Route::post("properties", [AttributeProductController::class, "store_propertie"]);
+    Route::delete("properties/{id}", [AttributeProductController::class, "destroy_propertie"]);
     Route::resource("attributes", AttributeProductController::class);
 
     Route::resource("sliders", SliderController::class);
@@ -41,8 +41,10 @@ Route::group([
 
     Route::get("products/config", [ProductController::class, "config"]);
     Route::post("products/imagens", [ProductController::class, "imagens"]);
-    Route::delete("products/imagens/{id}", [ProductController::class, "delete_imagens"]);
+    Route::delete("products/imagens/{id}", [ProductController::class, "delete_imagen"]);
     Route::post("products/index", [ProductController::class, "index"]);
     Route::resource("products", ProductController::class);
     Route::post("products/{id}", [ProductController::class, "update"]);
+
+    Route::resource("brands", BrandController::class);
 });
