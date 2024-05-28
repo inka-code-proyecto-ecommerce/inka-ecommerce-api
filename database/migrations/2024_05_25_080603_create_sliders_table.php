@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('label')->nullable();
             $table->string('subtitle')->nullable();
-            $table->string('image');
+            $table->string('color')->nullable();
+            $table->string('imagen');
             $table->text('link')->nullable();
             $table->tinyInteger('state')->default(1)->unsigned();
             $table->timestamps();
