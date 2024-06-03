@@ -29,7 +29,7 @@ class SliderController extends Controller
                     "link" => $slider->link,
                     "state" => $slider->state,
                     "color" => $slider->color,
-                    "imagen" => env("APP_URL")."storage/".$slider->imagen,
+                    "imagen" => env("APP_URL") . "storage/" . $slider->imagen,
                 ];
             }),
         ]);
@@ -63,7 +63,7 @@ class SliderController extends Controller
             "link" => $slider->link,
             "state" => $slider->state,
             "color" => $slider->color,
-            "imagen" => env("APP_URL")."storage/".$slider->imagen,
+            "imagen" => env("APP_URL") . "storage/" . $slider->imagen,
         ]]);
     }
 
