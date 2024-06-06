@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Discount\DiscountController;
 use App\Http\Controllers\Ecommerce\CartController;
 use App\Http\Controllers\Ecommerce\HomeController;
 use App\Http\Controllers\Ecommerce\SaleController;
+use App\Http\Controllers\Admin\Sale\SalesController;
 use App\Http\Controllers\Ecommerce\ReviewController;
 use App\Http\Controllers\Ecommerce\UserAddressController;
 use App\Http\Controllers\Admin\SliderController;
@@ -70,7 +71,12 @@ Route::group([
     Route::resource("cupones", CuponeController::class);
 
     Route::resource("discounts", DiscountController::class);
+
+    Route::post("sales/list",[SalesController::class,"list"]);
 });
+
+Route::get("sales/list-excel",[SalesController::class,"list_excel"]);
+Route::get("sales/report-pdf/{id}",[SalesController::class,"report_pdf"]);
 
 Route::group([
     "prefix" => "ecommerce",
