@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('label')->nullable();
-            $table->string('subtitle')->nullable();
-            $table->string('color')->nullable();
-            $table->string('imagen');
+            $table->string('title', 250);
+            $table->string('label', 250)->nullable();
+            $table->tinyInteger('type_slider')->default(1)->unsigned()->comment('1 principal, 2 banners y 3 productos');
+            $table->longText('subtitle')->nullable();
+            $table->string('imagen', 250);
             $table->text('link')->nullable();
+            $table->string('color', 50)->nullable();
+            $table->double('price_original')->nullable();
+            $table->double('price_campaing')->nullable();
             $table->tinyInteger('state')->default(1)->unsigned();
             $table->timestamps();
+            $table->softDeletes();
         });
+        
     }
 
     /**

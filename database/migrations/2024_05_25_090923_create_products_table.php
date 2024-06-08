@@ -29,6 +29,7 @@ return new class extends Migration
             $table->unsignedBigInteger('categorie_third_id')->nullable();
             $table->double('stock');
             $table->timestamps();
+            $table->softDeletes(); // Esto agregará una columna 'deleted_at' de tipo timestamp
         });
     }
 
