@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Sale\Cart;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -43,5 +44,9 @@ class User extends Authenticatable implements JWTSubject
   public function getJWTCustomClaims()
   {
     return [];
+  }
+  public function carts()
+  {
+    return $this->hasMany(Cart::class, "user_id");
   }
 }
