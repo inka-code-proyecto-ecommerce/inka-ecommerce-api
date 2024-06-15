@@ -14,7 +14,7 @@ class UserAddressController extends Controller
     public function index()
     {
         $user = auth('api')->user();
-        $address = UserAddres::where("user_id", $user->id)->orderBy("id", "desc")->get();
+        $address = UserAddres::where("user_id",$user->id)->orderBy("id","desc")->get();
 
         return response()->json([
             "address" => $address,

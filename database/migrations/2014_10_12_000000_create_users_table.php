@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname')->nullable();
             $table->string('avatar')->nullable();
+            $table->string('fb')->nullable();
+            $table->string('address_city')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('sexo')->nullable();
             $table->string('phone')->nullable();
             $table->tinyInteger('type_user')->unsigned()->default(2);
             $table->string('email')->unique();

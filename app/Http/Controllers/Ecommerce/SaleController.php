@@ -29,11 +29,10 @@ class SaleController extends Controller
         //
     }
 
-    public function orders()
-    {
+    public function orders(){
         $user = auth("api")->user();
 
-        $sales = Sale::where("user_id", $user->id)->orderBy("id", "desc")->get();
+        $sales = Sale::where("user_id",$user->id)->orderBy("id","desc")->get();
 
         return response()->json([
             "sales" => SaleCollection::make($sales),
@@ -48,7 +47,7 @@ class SaleController extends Controller
         $request->request->add(["user_id" => auth("api")->user()->id]);
         $sale = Sale::create($request->all());
 
-        $carts = Cart::where("user_id", auth("api")->user()->id)->get();
+        $carts = Cart::where("user_id",auth("api")->user()->id)->get();
 
         foreach ($carts as $key => $cart) {
             $nCart = $cart;
@@ -57,21 +56,21 @@ class SaleController extends Controller
             $new_detail["sale_id"] = $sale->id;
             SaleDetail::create($new_detail);
             // DESCUENTO DE STOCK DEL PRODUCTO
-            if ($cart->product_variation_id) {
-                $variation = ProductVariation::find($cart->product_variation_id);
-                if ($variation->variation_father) {
+            if($cart->product_variation_id){
+               $variation = ProductVariation::find($cart->product_variation_id);
+               if($variation->variation_father){
                     $variation->variation_father->update([
                         "stock" => $variation->variation_father->stock - $cart->quantity
                     ]);
                     $variation->update([
                         "stock" => $variation->stock - $cart->quantity
                     ]);
-                } else {
+               }else{
                     $variation->update([
                         "stock" => $variation->stock - $cart->quantity
                     ]);
-                }
-            } else {
+               }
+            }else{
                 $product = Product::find($cart->product_id);
                 $product->update([
                     "stock" => $product->stock - $cart->quantity
@@ -85,25 +84,24 @@ class SaleController extends Controller
         $sale_address = SaleAddres::create($sale_addres);
         // EL CORREO QUE LE DEBE LLEGAR AL CLIENTE CON LA COMPRA QUE ACABA DE REALIZAR
         $sale_new = Sale::findOrFail($sale->id);
-        Mail::to(auth("api")->user()->email)->send(new SaleMail(auth("api")->user(), $sale_new));
+        Mail::to(auth("api")->user()->email)->send(new SaleMail(auth("api")->user(),$sale_new));
         return response()->json([
             "message" => 200,
         ]);
     }
 
 
-    public function checkout_mercadopago(Request $request)
-    {
+    public function checkout_mercadopago(Request $request) {
         //
 
         $response = Http::withHeaders([
             "Content-Type" => "application/json",
-            "Authorization" => "Bearer " . env("MERCADOPAGO_KEY")
-        ])->get("https://api.mercadopago.com/v1/payments/" . $request->n_transaccion);
+            "Authorization" => "Bearer ".env("MERCADOPAGO_KEY")
+        ])->get("https://api.mercadopago.com/v1/payments/".$request->n_transaccion);
+        
+        $format_response = json_decode($response->getBody()->getContents(),true);
 
-        $format_response = json_decode($response->getBody()->getContents(), true);
-
-        $sale_temp = SaleTemp::where("user_id", auth("api")->user()->id)->first();
+        $sale_temp = SaleTemp::where("user_id",auth("api")->user()->id)->first();
 
         $request->request->add([
             "user_id" => auth("api")->user()->id,
@@ -113,7 +111,7 @@ class SaleController extends Controller
         ]);
         $sale = Sale::create($request->all());
 
-        $carts = Cart::where("user_id", auth("api")->user()->id)->get();
+        $carts = Cart::where("user_id",auth("api")->user()->id)->get();
 
         foreach ($carts as $key => $cart) {
             $nCart = $cart;
@@ -122,54 +120,53 @@ class SaleController extends Controller
             $new_detail["sale_id"] = $sale->id;
             SaleDetail::create($new_detail);
             // DESCUENTO DE STOCK DEL PRODUCTO
-            if ($cart->product_variation_id) {
+            if($cart->product_variation_id){
                 $variation = ProductVariation::find($cart->product_variation_id);
-                if ($variation->variation_father) {
-                    $variation->variation_father->update([
-                        "stock" => $variation->variation_father->stock - $cart->quantity
-                    ]);
-                    $variation->update([
-                        "stock" => $variation->stock - $cart->quantity
-                    ]);
-                } else {
-                    $variation->update([
-                        "stock" => $variation->stock - $cart->quantity
-                    ]);
+                if($variation->variation_father){
+                     $variation->variation_father->update([
+                         "stock" => $variation->variation_father->stock - $cart->quantity
+                     ]);
+                     $variation->update([
+                         "stock" => $variation->stock - $cart->quantity
+                     ]);
+                }else{
+                     $variation->update([
+                         "stock" => $variation->stock - $cart->quantity
+                     ]);
                 }
-            } else {
-                $product = Product::find($cart->product_id);
-                $product->update([
-                    "stock" => $product->stock - $cart->quantity
-                ]);
-            }
-            // LA ELIMINACIÓN DEL CARRITO
-            $cart->delete();
+             }else{
+                 $product = Product::find($cart->product_id);
+                 $product->update([
+                     "stock" => $product->stock - $cart->quantity
+                 ]);
+             }
+             // LA ELIMINACIÓN DEL CARRITO
+             $cart->delete();
         }
-
-        $sale_addres = json_decode($sale_temp->sale_address, true);
+        
+        $sale_addres = json_decode($sale_temp->sale_address,true);
         $sale_addres["sale_id"] = $sale->id;
         $sale_address = SaleAddres::create($sale_addres);
         // EL CORREO QUE LE DEBE LLEGAR AL CLIENTE CON LA COMPRA QUE ACABA DE REALIZAR
         $sale_new = Sale::findOrFail($sale->id);
-        Mail::to(auth("api")->user()->email)->send(new SaleMail(auth("api")->user(), $sale_new));
+        Mail::to(auth("api")->user()->email)->send(new SaleMail(auth("api")->user(),$sale_new));
         return response()->json([
             "message" => 200,
         ]);
     }
 
-    public function mercadopago(Request $request)
-    {
+    public function mercadopago(Request $request) {
 
         MercadoPagoConfig::setAccessToken(env("MERCADOPAGO_KEY"));
         $client = new PreferenceClient();
         $client->auto_return = "approved";
 
-        $carts = Cart::where("user_id", auth("api")->user()->id)->get();
+        $carts = Cart::where("user_id",auth("api")->user()->id)->get();
 
         $array_carts = [];
 
         foreach ($carts as $key => $cart) {
-            array_push($array_carts, [
+            array_push($array_carts,[
                 "title" => $cart->product->title,
                 "quantity" => $cart->quantity,
                 "currency_id" => $cart->currency,
@@ -177,16 +174,16 @@ class SaleController extends Controller
             ]);
         }
         $datos = array(
-            "items" => $array_carts,
-            "back_urls" => array(
-                "success" => env("URL_TIENDA") . "mercado-pago-success",
-                "failure" => env("URL_TIENDA") . "mercado-pago-failure",
-                "pending" => env("URL_TIENDA") . "mercado-pago-pending"
+            "items"=> $array_carts,
+            "back_urls" =>array(
+                "success" => env("URL_TIENDA")."mercado-pago-success",
+                "failure" => env("URL_TIENDA")."mercado-pago-failure",
+                "pending" => env("URL_TIENDA")."mercado-pago-pending"
             ),
-            "redirect_urls" => array(
-                "success" => env("URL_TIENDA") . "mercado-pago-success",
-                "failure" => env("URL_TIENDA") . "mercado-pago-failure",
-                "pending" => env("URL_TIENDA") . "mercado-pago-pending"
+            "redirect_urls" =>array(
+                "success" => env("URL_TIENDA")."mercado-pago-success",
+                "failure" => env("URL_TIENDA")."mercado-pago-failure",
+                "pending" => env("URL_TIENDA")."mercado-pago-pending"
             ),
             "auto_return" => "approved",
             "external_reference" => uniqid(),
@@ -198,15 +195,14 @@ class SaleController extends Controller
         ]);
     }
 
-    public function checkout_temp(Request $request)
-    {
-        $sale_temp = SaleTemp::where("user_id", auth('api')->user()->id)->first();
-        if ($sale_temp) {
+    public function checkout_temp(Request $request) {
+        $sale_temp = SaleTemp::where("user_id",auth('api')->user()->id)->first();
+        if($sale_temp){
             $sale_temp->update([
                 "description" => $request->description,
                 "sale_address" => json_encode($request->sale_address),
             ]);
-        } else {
+        }else{
             SaleTemp::create([
                 "user_id" => auth('api')->user()->id,
                 "description" => $request->description,
@@ -222,7 +218,7 @@ class SaleController extends Controller
     public function show(string $id)
     {
         //
-        $sale = Sale::where("n_transaccion", $id)->first();
+        $sale = Sale::where("n_transaccion",$id)->first();
 
         return response()->json([
             "sale" => SaleResource::make($sale),

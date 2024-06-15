@@ -3,10 +3,10 @@
 namespace App\Models\Product;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Discount\DiscountCategorie;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Categorie extends Model
 {
@@ -23,13 +23,11 @@ class Categorie extends Model
         "state",
     ];
 
-    public function setCreatedAtAttribute($value)
-    {
+    public function setCreatedAtAttribute($value){
         date_default_timezone_set("America/Lima");
         $this->attributes["created_at"] = Carbon::now();
     }
-    public function setUpdatedAtAttribute($value)
-    {
+    public function setUpdatedtAttribute($value){
         date_default_timezone_set("America/Lima");
         $this->attributes["updated_at"] = Carbon::now();
     }

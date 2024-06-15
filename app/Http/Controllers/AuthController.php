@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordMail;
 use App\Mail\VerifiedMail;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Validator;
@@ -48,6 +48,38 @@ class AuthController extends Controller
 
     return response()->json($user, 201);
   }
+
+  public function update(Request $request) {
+    if($request->passowrd){
+        $user = User::find(auth("api")->user()->id);
+        $user->update([
+            "password" => bcrypt($request->password)
+        ]);
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
+    $is_exists_email = User::where("id","<>",auth("api")->user()->id)
+                                ->where("email",$request->email)->first();
+    if($is_exists_email){
+        return response()->json([
+            "message" => 403,
+            "message_text" => "El usuario ya existe"
+        ]);
+    }
+    $user = User::find(auth("api")->user()->id);
+    if($request->hasFile("file_imagen")){
+        if($user->avatar){
+            Storage::delete($user->avatar);
+        }
+        $path = Storage::putFile("users",$request->file("file_imagen"));
+        $request->request->add(["avatar" => $path]);
+    }
+    $user->update($request->all());
+    return response()->json([
+        "message" => 200,
+    ]);
+}
 
   public function verified_email(Request $request)
   {
@@ -125,9 +157,20 @@ class AuthController extends Controller
   }
 
   public function me()
-  {
-    return response()->json(auth('api')->user());
-  }
+    {
+        $user = User::find(auth("api")->user()->id);
+        return response()->json([
+            'name' => $user->name,
+            'surname' => $user->surname,
+            'phone' => $user->phone,
+            'email' => $user->email,
+            'bio' => $user->bio,
+            'fb' => $user->fb,
+            'sexo' => $user->sexo,
+            'address_city' => $user->address_city,
+            'avatar' => $user->avatar ? env("APP_URL")."storage/".$user->avatar : 'https://cdn-icons-png.flaticon.com/512/1476/1476614.png',
+        ]);
+    }
 
   public function logout()
   {
