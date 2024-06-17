@@ -18,15 +18,17 @@ class Review extends Model
         "message",
         "rating"
     ];
-    public function setCreatedAtAttribute($value){
+    public function setCreatedAtAttribute($value)
+    {
         date_default_timezone_set("America/Lima");
         $this->attributes["created_at"] = Carbon::now();
     }
-    public function setUpdatedtAttribute($value){
+    public function setUpdatedtAttribute($value)
+    {
         date_default_timezone_set("America/Lima");
         $this->attributes["updated_at"] = Carbon::now();
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

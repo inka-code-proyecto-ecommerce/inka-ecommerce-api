@@ -27,17 +27,19 @@ class SaleDetail extends Model
         "subtotal",
         "total",
         "currency",
+        //
+        "created_at",
         "updated_at"
     ];
 
-    public function setCreatedAtAttribute($value){
-        date_default_timezone_set("America/Lima");
-        $this->attributes["created_at"] = Carbon::now();
-    }
-    public function setUpdatedtAttribute($value){
-        date_default_timezone_set("America/Lima");
-        $this->attributes["updated_at"] = Carbon::now();
-    }
+    // public function setCreatedAtAttribute($value){
+    //     date_default_timezone_set("America/Lima");
+    //     $this->attributes["created_at"] = Carbon::now();
+    // }
+    // public function setUpdatedtAttribute($value){
+    //     date_default_timezone_set("America/Lima");
+    //     $this->attributes["updated_at"] = Carbon::now();
+    // }
 
     public function sale()
     {
@@ -56,6 +58,6 @@ class SaleDetail extends Model
 
     public function review()
     {
-        return $this->hasOne(Review::class,"sale_detail_id");
+        return $this->hasOne(Review::class, "sale_detail_id");
     }
 }

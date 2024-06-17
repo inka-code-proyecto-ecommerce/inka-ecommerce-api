@@ -23,11 +23,13 @@ class UserAddres extends Model
         "email"
     ];
 
-    public function setCreatedAtAttribute($value){
+    public function setCreatedAtAttribute($value)
+    {
         date_default_timezone_set("America/Lima");
         $this->attributes["created_at"] = Carbon::now();
     }
-    public function setUpdatedtAttribute($value){
+    public function setUpdatedtAttribute($value)
+    {
         date_default_timezone_set("America/Lima");
         $this->attributes["updated_at"] = Carbon::now();
     }
