@@ -12,9 +12,10 @@ use App\Http\Resources\Ecommerce\Sale\SaleCollection;
 
 class SalesController extends Controller
 {
-    
-    
-    public function list(Request $request) {
+
+
+    public function list(Request $request)
+    {
 
         $search = $request->search;
         $start_date = $request->start_date;
@@ -27,9 +28,17 @@ class SalesController extends Controller
 
         $method_payment = $request->method_payment;
 
-        $sales = Sale::filterAdvanceAdmin($search,$start_date,$end_date,$brand_id,$categorie_first_id,
-                        $categorie_second_id,$categorie_third_id,$method_payment)
-                        ->orderBy("id","desc")->paginate(25);
+        $sales = Sale::filterAdvanceAdmin(
+            $search,
+            $start_date,
+            $end_date,
+            $brand_id,
+            $categorie_first_id,
+            $categorie_second_id,
+            $categorie_third_id,
+            $method_payment
+        )
+            ->orderBy("id", "desc")->paginate(25);
 
         return response()->json([
             "total" => $sales->total(),
@@ -37,7 +46,8 @@ class SalesController extends Controller
         ]);
     }
 
-    public function list_excel(Request $request){
+    public function list_excel(Request $request)
+    {
 
         $search = $request->search;
         $start_date = $request->start_date;
@@ -50,18 +60,27 @@ class SalesController extends Controller
 
         $method_payment = $request->method_payment;
 
-        $sales = Sale::filterAdvanceAdmin($search,$start_date,$end_date,$brand_id,$categorie_first_id,
-                        $categorie_second_id,$categorie_third_id,$method_payment)
-                        ->orderBy("id","desc")->get();
+        $sales = Sale::filterAdvanceAdmin(
+            $search,
+            $start_date,
+            $end_date,
+            $brand_id,
+            $categorie_first_id,
+            $categorie_second_id,
+            $categorie_third_id,
+            $method_payment
+        )
+            ->orderBy("id", "desc")->get();
 
-        return Excel::download(new SaleExport($sales),"sales_export.xlsx");
+        return Excel::download(new SaleExport($sales), "sales_export.xlsx");
     }
 
-    public function report_pdf($id){
+    public function report_pdf($id)
+    {
         $sale = Sale::findOrFail($id);
 
-        $pdf = PDF::loadView("sale.sale_pdf",compact("sale"));
+        $pdf = PDF::loadView("sale.sale_pdf", compact("sale"));
 
-        return $pdf->stream("venta_pdf".$sale->id.".pdf");
+        return $pdf->stream("venta_pdf" . $sale->id . ".pdf");
     }
 }

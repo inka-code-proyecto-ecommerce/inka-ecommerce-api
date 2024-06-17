@@ -17,6 +17,10 @@ class SaleResource extends JsonResource
         return [
             "id" => $this->resource->id,
             "user_id" => $this->resource->user_id,
+            "user" => [
+                "avatar" => $this->resource->user->avatar ? env("APP_URL") . "storage/" . $this->resource->user->avatar : 'https://cdn-icons-png.flaticon.com/512/1476/1476614.png',
+                "full_name" => $this->resource->user->name . ' ' . $this->resource->user->surname,
+            ],
             "method_payment" => $this->resource->method_payment,
             "currency_total" => $this->resource->currency_total,
             "currency_payment" => $this->resource->currency_payment,
@@ -26,7 +30,7 @@ class SaleResource extends JsonResource
             "price_dolar" => $this->resource->price_dolar,
             "description" => $this->resource->description,
             "n_transaccion" => $this->resource->n_transaccion,
-            "sale_details" => $this->resource->sale_details->map(function($sale_detail) {
+            "sale_details" => $this->resource->sale_details->map(function ($sale_detail) {
                 return [
                     "id" => $sale_detail->id,
                     "product_id" => $sale_detail->product_id,
@@ -36,12 +40,12 @@ class SaleResource extends JsonResource
                         "slug"  => $sale_detail->product->slug,
                         "price_pen"  => $sale_detail->product->price_pen,
                         "price_usd"  => $sale_detail->product->price_usd,
-                        "imagen"  => env("APP_URL")."storage/".$sale_detail->product->imagen,
+                        "imagen"  => env("APP_URL") . "storage/" . $sale_detail->product->imagen,
                         "brand_id"  => $sale_detail->product->brand_id,
                         "brand" => $sale_detail->product->brand ? [
                             "id" => $sale_detail->product->brand->id,
-                            "name" => $sale_detail->product->brand->name, 
-                        ]: NULL,
+                            "name" => $sale_detail->product->brand->name,
+                        ] : NULL,
                     ],
                     "type_discount" => $sale_detail->type_discount,
                     "discount" => $sale_detail->discount,
@@ -62,7 +66,7 @@ class SaleResource extends JsonResource
                             "code" => $sale_detail->product_variation->propertie->code,
                         ] : NULL,
                         "value_add" => $sale_detail->product_variation->value_add,
-                        "variation_father" => $sale_detail->product_variation->variation_father ? 
+                        "variation_father" => $sale_detail->product_variation->variation_father ?
                             [
                                 "id" => $sale_detail->product_variation->variation_father->id,
                                 "attribute_id" => $sale_detail->product_variation->variation_father->attribute_id,
@@ -77,7 +81,7 @@ class SaleResource extends JsonResource
                                 ] : NULL,
                                 "value_add" => $sale_detail->product_variation->variation_father->value_add,
                             ]
-                        : NULL,
+                            : NULL,
                     ] : NULL,
                     "quantity" => $sale_detail->quantity,
                     "price_unit" => $sale_detail->price_unit,
