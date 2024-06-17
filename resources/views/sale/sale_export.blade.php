@@ -25,8 +25,10 @@
                 <td>{{ $sale->total }} {{ $sale->currency_payment }}</td>
                 <td>{{ $sale->n_transaccion }}</td>
                 <td>{{ $sale->created_at->format('Y-m-d h:i:s') }}</td>
-                <td>{{ $sale->sale_addres->country_region . ' ' . $sale->sale_addres->city . ' ' . $sale->sale_addres->company }}
-                </td>
+                <td>{{ $sale->sale_addres->country_region." ".
+                    $sale->sale_addres->city." ".
+                    $sale->sale_addres->company
+            }}</td>
             </tr>
         @endforeach
     </tbody>
