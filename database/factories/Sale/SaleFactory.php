@@ -38,7 +38,7 @@ class SaleFactory extends Factory
             "description" => $this->faker->text($maxNbChars = 300),
             "n_transaccion" =>  Str::random(6),
             "preference_id" =>  $method_payment == "MERCADOPAGO" ? Str::random(5) : NULL,
-            // 
+            //
             "created_at" => $date_sales,
             "updated_at" => $date_sales,
         ];

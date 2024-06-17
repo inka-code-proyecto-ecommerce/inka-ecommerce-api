@@ -39,7 +39,7 @@ class SaleSeeder extends Seeder
             $num_items = $faker->randomElement([1,2,3,4,5]);
 
             $sum_total_sale = 0;
-            for ($i=0; $i < $num_items; $i++) { 
+            for ($i=0; $i < $num_items; $i++) {
                 $quantity = $faker->randomElement([1,2,3,4,5,6,7,8,9,10]);
                 $product = Product::inRandomOrder()->first();
                 $is_cupon_discount = $faker->randomElement([1,2,3]);
@@ -65,7 +65,7 @@ class SaleSeeder extends Seeder
             }
 
             $sale = Sale::findOrFail($p->id);
-            
+
             if($p->currency_total != $p->currency_payment){
                 $sum_total_sale = round(($sum_total_sale/3.85),2);
                 $sale->update([
@@ -78,7 +78,7 @@ class SaleSeeder extends Seeder
                     "total" => $sum_total_sale,
                 ]);
             }
-            
+
         });
         // php artisan db:seed --class=SaleSeeder
     }
