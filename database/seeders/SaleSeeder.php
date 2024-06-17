@@ -19,7 +19,7 @@ class SaleSeeder extends Seeder
      */
     public function run(): void
     {
-        Sale::factory()->count(1000)->create()->each(function ($p) {
+        Sale::factory()->count(1000)->create()->each(function($p) {
             $faker = \Faker\Factory::create();
 
             SaleAddres::create([
@@ -27,7 +27,7 @@ class SaleSeeder extends Seeder
                 "name" => $faker->name(),
                 "surname" => $faker->lastName(),
                 "company" =>  $faker->word(),
-                "country_region" =>  $faker->word(),
+                "country_region" =>  $faker->randomElement(['Perú','Argentina','Bolivia','Brasil','Chile','Costa Rica','Cuba','Ecuador','El Salvador','Uruguay','Venezuela','México']),
                 "address" =>  $faker->word(),
                 "street" =>  $faker->word(),
                 "city" =>  $faker->word(),
@@ -36,13 +36,13 @@ class SaleSeeder extends Seeder
                 "email" => $faker->unique()->safeEmail(),
             ]);
 
-            $num_items = $faker->randomElement([1, 2, 3, 4, 5]);
+            $num_items = $faker->randomElement([1,2,3,4,5]);
 
             $sum_total_sale = 0;
-            for ($i = 0; $i < $num_items; $i++) {
-                $quantity = $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            for ($i=0; $i < $num_items; $i++) { 
+                $quantity = $faker->randomElement([1,2,3,4,5,6,7,8,9,10]);
                 $product = Product::inRandomOrder()->first();
-                $is_cupon_discount = $faker->randomElement([1, 2, 3]);
+                $is_cupon_discount = $faker->randomElement([1,2,3]);
                 $discount_cupone = $this->getDiscountCupone($is_cupon_discount);
                 $sale_detail = SaleDetail::create([
                     "sale_id" => $p->id,
@@ -55,8 +55,8 @@ class SaleSeeder extends Seeder
                     "product_variation_id" => NULL,
                     "quantity" => $quantity,
                     "price_unit" => $p->currency_total == 'PEN' ? $product->price_pen : $product->price_usd,
-                    "subtotal" => $this->getTotalProduct($discount_cupone, $product, $p->currency_total),
-                    "total" => $this->getTotalProduct($discount_cupone, $product, $p->currency_total) * $quantity,
+                    "subtotal" => $this->getTotalProduct($discount_cupone,$product,$p->currency_total),
+                    "total" => $this->getTotalProduct($discount_cupone,$product,$p->currency_total) * $quantity,
                     "currency" => $p->currency_total,
                     "created_at" => $p->created_at,
                     "updated_at" => $p->updated_at,
@@ -65,30 +65,30 @@ class SaleSeeder extends Seeder
             }
 
             $sale = Sale::findOrFail($p->id);
-
-            if ($p->currency_total != $p->currency_payment) {
-                $sum_total_sale = round(($sum_total_sale / 3.85), 2);
+            
+            if($p->currency_total != $p->currency_payment){
+                $sum_total_sale = round(($sum_total_sale/3.85),2);
                 $sale->update([
                     "subtotal" => $sum_total_sale,
                     "total" => $sum_total_sale,
                 ]);
-            } else {
+            }else{
                 $sale->update([
                     "subtotal" => $sum_total_sale,
                     "total" => $sum_total_sale,
                 ]);
             }
+            
         });
         // php artisan db:seed --class=SaleSeeder
     }
 
-    public function getDiscountCupone($is_cupon_discount)
-    {
-        if ($is_cupon_discount != 3) {
-            if ($is_cupon_discount == 1) {
+    public function getDiscountCupone($is_cupon_discount){
+        if($is_cupon_discount != 3){
+            if($is_cupon_discount == 1){
                 $cupone = Cupone::inRandomOrder()->first();
                 return $cupone;
-            } else {
+            }else{
                 $discount = Discount::inRandomOrder()->first();
                 return $discount;
             }
@@ -96,24 +96,23 @@ class SaleSeeder extends Seeder
         return null;
     }
 
-    public function getTotalProduct($discount_cupone, $product, $currency)
-    {
-        if ($discount_cupone) {
-            if ($currency == "PEN") {
+    public function getTotalProduct($discount_cupone,$product,$currency) {
+        if($discount_cupone){
+            if($currency == "PEN"){
                 $price = $product->price_pen;
-            } else {
+            }else{
                 $price = $product->price_usd;
             }
-            if ($discount_cupone->type_discount == 1) {
-                $price = $price - $discount_cupone->discount * 0.01 * $price;
-            } else {
+            if($discount_cupone->type_discount == 1) {
+                $price = $price - $discount_cupone->discount*0.01*$price;
+            }else{
                 $price = $price - $discount_cupone->discount;
             }
             return $price;
         }
-        if ($currency == "PEN") {
+        if($currency == "PEN"){
             return $product->price_pen;
-        } else {
+        }else{
             return $product->price_usd;
         }
     }

@@ -20,16 +20,16 @@ class SaleFactory extends Factory
      */
     public function definition(): array
     {
-        $method_payment = $this->faker->randomElement(["PAYPAL", "MERCADOPAGO"]);
-        $date_sales = $this->faker->dateTimeBetween("2023-01-01 00:00:00", "2023-12-25 23:59:59");
-        // $date_sales = $this->faker->dateTimeBetween("2024-01-01 00:00:00", "2024-12-25 23:59:59");
+        $method_payment = $this->faker->randomElement(["PAYPAL","MERCADOPAGO"]);
+        // $date_sales = $this->faker->dateTimeBetween("2023-01-01 00:00:00", "2023-12-25 23:59:59");
+        $date_sales = $this->faker->dateTimeBetween("2024-01-01 00:00:00", "2024-12-25 23:59:59");
 
 
-        $currency_payment = $this->faker->randomElement(["USD", "PEN"]);
+        $currency_payment = $this->faker->randomElement(["USD","PEN"]);
         return [
-            "user_id" => User::where("type_user", 2)->inRandomOrder()->first()->id,
+            "user_id" => User::where("type_user",2)->inRandomOrder()->first()->id,
             "method_payment" => $method_payment,
-            "currency_total" => $currency_payment == "USD" ? $this->faker->randomElement(["USD", "PEN"]) : 'PEN',
+            "currency_total" => $currency_payment == "USD" ? $this->faker->randomElement(["USD","PEN"]) : 'PEN',
             "currency_payment" => $currency_payment,
             "discount" => 0,
             "subtotal" => 0,
@@ -38,7 +38,7 @@ class SaleFactory extends Factory
             "description" => $this->faker->text($maxNbChars = 300),
             "n_transaccion" =>  Str::random(6),
             "preference_id" =>  $method_payment == "MERCADOPAGO" ? Str::random(5) : NULL,
-            //
+            // 
             "created_at" => $date_sales,
             "updated_at" => $date_sales,
         ];
