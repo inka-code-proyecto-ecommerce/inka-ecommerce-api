@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sale_id');
             $table->unsignedBigInteger('product_id');
             $table->tinyInteger('type_discount')->nullable();
-            $table->double('discount')->default(0);
+            $table->double('discount')->nullable()->default(0);
             $table->tinyInteger('type_campaing')->unsigned()->nullable();
             $table->string('code_cupon', 250)->nullable();
             $table->string('code_discount', 50)->nullable();
