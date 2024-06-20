@@ -26,9 +26,5 @@ class DatabaseSeeder extends Seeder
       'email' => 'admin@gmail.com',
       'type_user' => 1
     ]);
-    $this->call([
-      ProductSeeder::class,
-      SaleSeeder::class,
-    ]);
   }
 }
